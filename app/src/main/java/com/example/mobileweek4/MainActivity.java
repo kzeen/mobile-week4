@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        Add url browsing functionality
         ActivityMainBinding.btnWeb.setOnClickListener(v->open_web());
+        ActivityMainBinding.btnLocation.setOnClickListener(v->open_map());
     }
 
     private void open_web() {
@@ -40,5 +41,12 @@ public class MainActivity extends AppCompatActivity {
         browseIntent.setData(Uri.parse(url));
 
         startActivity(browseIntent);
+    }
+
+    private void open_map() {
+        String location = ActivityMainBinding.etAddress.getText().toString();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+        mapIntent.setData(Uri.parse("geo:" + location));
+        startActivity(mapIntent);
     }
 }
