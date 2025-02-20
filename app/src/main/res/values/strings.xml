@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Mobile Week 4</string>
+    <string name="implicit_intents">Implicit Intents</string>
+    <string name="phone_number">phone number</string>
+    <string name="call">CALL</string>
+    <string name="address">Address</string>
+    <string name="open_location">OPEN LOCATION</string>
+    <string name="url_address">URL address</string>
+    <string name="open_web">OPEN WEB</string>
+    <string name="pick_image">Pick Image</string>
 </resources>
