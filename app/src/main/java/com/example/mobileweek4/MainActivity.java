@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.Manifest;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,6 +18,7 @@ import com.example.mobileweek4.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     public ActivityMainBinding ActivityMainBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,14 +33,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 //        Add url browsing functionality
-        ActivityMainBinding.btnWeb.setOnClickListener(v->open_web());
-        ActivityMainBinding.btnLocation.setOnClickListener(v->open_map());
+        ActivityMainBinding.btnWeb.setOnClickListener(v -> open_web());
+        ActivityMainBinding.btnLocation.setOnClickListener(v -> open_map());
         ActivityMainBinding.btCall.setOnClickListener(v -> do_call());
     }
 
     private void open_web() {
         String url = ActivityMainBinding.etUrl.getText().toString();
-        if(!url.startsWith("http://") && !url.startsWith("https://")) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
             url = "http://" + url;
         }
 
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void do_call() {
 //        Creating an intent now will crash - we have to get permission first
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
         } else {
             place_call();
@@ -68,5 +71,18 @@ public class MainActivity extends AppCompatActivity {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + phone));
         startActivity(callIntent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode==1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                place_call();
+            } else {
+                Toast.makeText(this, "Permission denied, enable it in settings", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
