@@ -1,10 +1,13 @@
 package com.example.mobileweek4;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-
+import android.Manifest;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 //        Add url browsing functionality
         ActivityMainBinding.btnWeb.setOnClickListener(v->open_web());
         ActivityMainBinding.btnLocation.setOnClickListener(v->open_map());
+        ActivityMainBinding.btCall.setOnClickListener(v -> do_call());
     }
 
     private void open_web() {
@@ -46,7 +50,23 @@ public class MainActivity extends AppCompatActivity {
     private void open_map() {
         String location = ActivityMainBinding.etAddress.getText().toString();
         Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-        mapIntent.setData(Uri.parse("geo:" + location));
+        mapIntent.setData(Uri.parse("geo:0,0?q=" + Uri.encode(location)));
         startActivity(mapIntent);
+    }
+
+    private void do_call() {
+//        Creating an intent now will crash - we have to get permission first
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+        } else {
+            place_call();
+        }
+    }
+
+    private void place_call() {
+        String phone = ActivityMainBinding.etPhoneNumber.getText().toString();
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + phone));
+        startActivity(callIntent);
     }
 }
